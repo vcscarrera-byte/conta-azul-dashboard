@@ -39,7 +39,7 @@ REFRESH_TOKEN = _get_secret("CONTA_AZUL_REFRESH_TOKEN")
 AUTH_URL = "https://auth.contaazul.com/login"
 TOKEN_URL = "https://auth.contaazul.com/oauth2/token"
 TOKEN_FILE = str(PROJECT_ROOT / "token.json")
-SCOPE = "openid+profile+aws.cognito.signin.user.admin"
+SCOPE = ""  # Conta Azul não requer scope explícito
 
 # ─── API ───
 

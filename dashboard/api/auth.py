@@ -92,8 +92,9 @@ class ContaAzulAuth:
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
             "state": STATE,
-            "scope": SCOPE,
         }
+        if SCOPE:
+            params["scope"] = SCOPE
         return f"{AUTH_URL}?{urlencode(params)}"
 
     def exchange_code(self, code: str) -> dict:
