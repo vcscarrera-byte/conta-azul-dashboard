@@ -32,7 +32,7 @@ def _get_secret(key: str, default: str = None) -> str | None:
 
 CLIENT_ID = _get_secret("CONTA_AZUL_CLIENT_ID")
 CLIENT_SECRET = _get_secret("CONTA_AZUL_CLIENT_SECRET")
-REDIRECT_URI = _get_secret("CONTA_AZUL_REDIRECT_URI", "https://www.contaazul.com")
+REDIRECT_URI = _get_secret("CONTA_AZUL_REDIRECT_URI", "https://contaazul.com")
 STATE = _get_secret("CONTA_AZUL_STATE", "random_state")
 REFRESH_TOKEN = _get_secret("CONTA_AZUL_REFRESH_TOKEN")
 

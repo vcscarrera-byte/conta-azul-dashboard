@@ -30,6 +30,24 @@ from dashboard.config import (
 )
 
 
+def _get_cached_token() -> dict | None:
+    """Recupera token do st.session_state (sobrevive reruns no Cloud)."""
+    try:
+        import streamlit as st
+        return st.session_state.get("_conta_azul_token")
+    except Exception:
+        return None
+
+
+def _set_cached_token(token_data: dict):
+    """Salva token no st.session_state para sobreviver reruns."""
+    try:
+        import streamlit as st
+        st.session_state["_conta_azul_token"] = token_data
+    except Exception:
+        pass
+
+
 class ContaAzulAuth:
     def __init__(
         self,
@@ -48,8 +66,17 @@ class ContaAzulAuth:
             )
 
         self.access_token: str | None = None
-        self.refresh_token: str | None = REFRESH_TOKEN  # Pode vir do secrets (Cloud)
+        self.refresh_token: str | None = None
         self.expires_at: float = 0
+
+        # Prioridade: session_state > token.json > secrets
+        cached = _get_cached_token()
+        if cached:
+            self.access_token = cached.get("access_token")
+            self.refresh_token = cached.get("refresh_token")
+            self.expires_at = cached.get("expires_at", 0)
+        elif not self._load_token():
+            self.refresh_token = REFRESH_TOKEN  # Fallback: secrets
 
     # ─── Header de autenticação Basic ───
 
@@ -128,7 +155,11 @@ class ContaAzulAuth:
             "refresh_token": self.refresh_token,
         }
         response = requests.post(TOKEN_URL, headers=headers, data=data)
-        response.raise_for_status()
+        if not response.ok:
+            error_detail = response.text[:500]
+            raise RuntimeError(
+                f"Falha ao renovar token ({response.status_code}): {error_detail}"
+            )
         token_data = response.json()
         self._save_token(token_data)
 
@@ -140,16 +171,19 @@ class ContaAzulAuth:
         expires_in = token_data.get("expires_in", 3600)
         self.expires_at = time.time() + expires_in - 60  # margem de 60s
 
+        token_cache = {
+            "access_token": self.access_token,
+            "refresh_token": self.refresh_token,
+            "expires_at": self.expires_at,
+        }
+
+        # Salva no session_state (Cloud — sobrevive reruns)
+        _set_cached_token(token_cache)
+
+        # Salva no disco (local dev)
         try:
             with open(TOKEN_FILE, "w") as f:
-                json.dump(
-                    {
-                        "access_token": self.access_token,
-                        "refresh_token": self.refresh_token,
-                        "expires_at": self.expires_at,
-                    },
-                    f,
-                )
+                json.dump(token_cache, f)
         except OSError:
             # No Cloud (read-only filesystem), salva apenas em memória
             pass
