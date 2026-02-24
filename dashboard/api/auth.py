@@ -22,6 +22,8 @@ from dashboard.config import (
     CLIENT_SECRET,
     REDIRECT_URI,
     REFRESH_TOKEN,
+    ACCESS_TOKEN,
+    TOKEN_EXPIRES_AT,
     STATE,
     AUTH_URL,
     TOKEN_URL,
@@ -76,7 +78,14 @@ class ContaAzulAuth:
             self.refresh_token = cached.get("refresh_token")
             self.expires_at = cached.get("expires_at", 0)
         elif not self._load_token():
-            self.refresh_token = REFRESH_TOKEN  # Fallback: secrets
+            # Fallback: carregar tokens dos secrets (Cloud)
+            self.refresh_token = REFRESH_TOKEN
+            if ACCESS_TOKEN:
+                self.access_token = ACCESS_TOKEN
+                try:
+                    self.expires_at = float(TOKEN_EXPIRES_AT or 0)
+                except (ValueError, TypeError):
+                    self.expires_at = 0
 
     # ─── Header de autenticação Basic ───
 

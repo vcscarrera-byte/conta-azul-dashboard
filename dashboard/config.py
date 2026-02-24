@@ -35,6 +35,8 @@ CLIENT_SECRET = _get_secret("CONTA_AZUL_CLIENT_SECRET")
 REDIRECT_URI = _get_secret("CONTA_AZUL_REDIRECT_URI", "https://contaazul.com")
 STATE = _get_secret("CONTA_AZUL_STATE", "random_state")
 REFRESH_TOKEN = _get_secret("CONTA_AZUL_REFRESH_TOKEN")
+ACCESS_TOKEN = _get_secret("CONTA_AZUL_ACCESS_TOKEN")
+TOKEN_EXPIRES_AT = _get_secret("CONTA_AZUL_TOKEN_EXPIRES_AT")
 
 AUTH_URL = "https://auth.contaazul.com/login"
 TOKEN_URL = "https://auth.contaazul.com/oauth2/token"
