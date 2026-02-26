@@ -5,3 +5,5 @@ token.json
 .venv/
 .claude/
 .streamlit/secrets.toml
+certs/
+inter_token.json

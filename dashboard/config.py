@@ -54,9 +54,21 @@ RETRY_BACKOFF = 1.0  # segundos
 
 CACHE_TTL = 300  # 5 minutos
 
+# ─── Banco Inter PJ ───
+
+INTER_CLIENT_ID = _get_secret("INTER_CLIENT_ID")
+INTER_CLIENT_SECRET = _get_secret("INTER_CLIENT_SECRET")
+INTER_CERT_PATH = _get_secret("INTER_CERT_PATH")
+INTER_KEY_PATH = _get_secret("INTER_KEY_PATH")
+INTER_CONTA_CORRENTE = _get_secret("INTER_CONTA_CORRENTE")
+INTER_API_BASE_URL = "https://cdpj.partners.bancointer.com.br"
+INTER_TOKEN_URL = "https://cdpj.partners.bancointer.com.br/oauth/v2/token"
+INTER_ENABLED = bool(INTER_CLIENT_ID and INTER_CLIENT_SECRET)
+
 # ─── Dashboard ───
 
 PROJECTION_DAYS = 60
 BURN_RATE_MONTHS = 6
 LOOKBACK_DAYS = 180
 DELINQUENCY_WARNING_THRESHOLD = 0.20  # 20%
+RECONCILIATION_DATE_TOLERANCE = 3  # dias de tolerância para conciliação
