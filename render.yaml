@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: dashboard-cfo
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run dashboard/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: CONTA_AZUL_CLIENT_ID
+        sync: false
+      - key: CONTA_AZUL_CLIENT_SECRET
+        sync: false
+      - key: CONTA_AZUL_REDIRECT_URI
+        sync: false
+      - key: CONTA_AZUL_STATE
+        sync: false
+      - key: ACCESS_TOKEN
+        sync: false
+      - key: REFRESH_TOKEN
+        sync: false
+      - key: INTER_CLIENT_ID
+        sync: false
+      - key: INTER_CLIENT_SECRET
+        sync: false
+      - key: INTER_CERT_PATH
+        sync: false
+      - key: INTER_KEY_PATH
+        sync: false
+      - key: INTER_CONTA_CORRENTE
+        sync: false
